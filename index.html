@@ -279,13 +279,8 @@
       z-index: 5;
     }
 
-    .side-gallery.left {
-      left: 10px;
-    }
-
-    .side-gallery.right {
-      right: 10px;
-    }
+    .side-gallery.left { left: 10px; }
+    .side-gallery.right { right: 10px; }
 
     .polaroid-card {
       background: #ffffff;
@@ -294,7 +289,6 @@
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
       border: 1px solid rgba(0,0,0,0.06);
       width: 90px;
-      transition: transform 0.4s ease;
       opacity: 0;
     }
 
@@ -306,7 +300,6 @@
       display: block;
     }
 
-    /* Rotasi & Animasi Kemas */
     .left .polaroid-card:nth-child(1) { transform: translateX(-60px) rotate(-8deg); }
     .left .polaroid-card:nth-child(2) { transform: translateX(-60px) rotate(6deg); }
     .left .polaroid-card:nth-child(3) { transform: translateX(-60px) rotate(-5deg); }
@@ -342,23 +335,51 @@
     .right .polaroid-card:nth-child(2) { --rot: -5deg; }
     .right .polaroid-card:nth-child(3) { --rot: 6deg; }
 
-    /* Penyelarasan untuk iPhone/Skrin Kecil */
+    /* --- FLASH JUMPSCARE OVERLAY --- */
+    #jumpscare-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.96);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .jumpscare-img {
+      max-width: 85vw;
+      max-height: 70vh;
+      border-radius: 16px;
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
+      animation: shakeScare 0.12s infinite alternate;
+    }
+
+    .jumpscare-text {
+      color: #ff4d4d;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-top: 16px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: shakeScare 0.1s infinite alternate;
+    }
+
+    @keyframes shakeScare {
+      0% { transform: scale(1.05) translate(-4px, 3px) rotate(-2deg); }
+      100% { transform: scale(1.1) translate(4px, -3px) rotate(2deg); }
+    }
+
     @media (max-width: 600px) {
-      .side-gallery {
-        width: 72px;
-      }
+      .side-gallery { width: 72px; }
       .side-gallery.left { left: 4px; }
       .side-gallery.right { right: 4px; }
-      .polaroid-card {
-        width: 65px;
-        padding: 4px 4px 10px 4px;
-      }
-      .polaroid-card img {
-        height: 65px;
-      }
-      .glass-card {
-        padding: 24px 14px;
-      }
+      .polaroid-card { width: 65px; padding: 4px 4px 10px 4px; }
+      .polaroid-card img { height: 65px; }
+      .glass-card { padding: 24px 14px; }
     }
 
     @keyframes fadeIn {
@@ -368,6 +389,12 @@
   </style>
 </head>
 <body>
+
+  <!-- Jumpscare Overlay (0.65 saat je) -->
+  <div id="jumpscare-overlay">
+    <img src="wonuseram.jpg" alt="Wonwoo Jumpscare" class="jumpscare-img" onerror="this.src='https://placehold.co/400x400/222222/ffffff?text=BAAANG+WONWOO!'">
+    <div class="jumpscare-text">SURPRISEEEE! 🐱👓💥</div>
+  </div>
 
   <!-- Kiri: y1, y2, y3 -->
   <div class="side-gallery left" id="leftGallery">
@@ -435,7 +462,7 @@
       </audio>
 
       <!-- Envelope Trigger -->
-      <button class="envelope-btn" id="openBtn" onclick="openLetter()">
+      <button class="envelope-btn" id="openBtn" onclick="triggerOpenSequence()">
         <span>✉️</span> Tekan ni TOLOL
       </button>
 
@@ -459,7 +486,7 @@ From the first day, i am loving u. Till now dho, even banyak nakmampos gado like
 
 Thanks for giving me the true meaning of love and happiness for this two frickin years. 
 
-May we still living further to get what we both always truly want: A simple love <3. You really are as pretty as the song says.
+May we still living further to get what we both always truly want: A simple love &lt;3. You really are as pretty as the song says.
 
 From nanan,  
 To yuyu masham 💎✨
@@ -497,7 +524,20 @@ To yuyu masham 💎✨
     audio.addEventListener('play', () => { playBtn.innerText = "⏸"; });
     audio.addEventListener('pause', () => { playBtn.innerText = "▶"; });
 
-    // 3. Papar Surat, Munculkan Gambar Sisi & Cetuskan Konfeti
+    // 3. Jumpscare Flash -> Buka Surat & Mainkan Muzik
+    function triggerOpenSequence() {
+      const scare = document.getElementById("jumpscare-overlay");
+      
+      // Papar Flash Jumpscare
+      scare.style.display = "flex";
+
+      // Hilang selepas 650ms, terus buka surat & start lagu
+      setTimeout(() => {
+        scare.style.display = "none";
+        openLetter();
+      }, 650);
+    }
+
     function openLetter() {
       document.getElementById("secret-letter").style.display = "block";
       document.getElementById("openBtn").style.display = "none";
