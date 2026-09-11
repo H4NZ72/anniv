@@ -15,7 +15,7 @@
     :root {
       --rose-quartz: #f7cac9;
       --serenity: #92a8d1;
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.94);
       --text-main: #3d3b4f;
     }
 
@@ -33,14 +33,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 24px 16px;
+      padding: 24px 12px;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
     }
 
     .container {
       width: 100%;
       max-width: 480px;
       margin: auto;
+      position: relative;
+      z-index: 10;
     }
 
     .glass-card {
@@ -50,7 +54,7 @@
       border-radius: 28px;
       padding: 28px 20px;
       box-shadow: 0 16px 36px rgba(146, 168, 209, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.85);
       text-align: center;
     }
 
@@ -187,14 +191,9 @@
       justify-content: center;
       cursor: pointer;
       font-size: 0.88rem;
-      transition: transform 0.15s ease;
     }
 
-    .play-btn:active {
-      transform: scale(0.92);
-    }
-
-    /* Action Button */
+    /* Button */
     .envelope-btn {
       background: linear-gradient(135deg, #f7cac9, #92a8d1);
       border: none;
@@ -205,14 +204,9 @@
       font-weight: 600;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(146, 168, 209, 0.35);
-      transition: transform 0.15s ease;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-    }
-
-    .envelope-btn:active {
-      transform: scale(0.95);
     }
 
     /* Secret Letter Container */
@@ -270,6 +264,103 @@
       white-space: pre-line;
     }
 
+    /* --- SIDE MEMORIES (KIRI & KANAN) --- */
+    .side-gallery {
+      display: none;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 105px;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      padding: 20px 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .side-gallery.left {
+      left: 10px;
+    }
+
+    .side-gallery.right {
+      right: 10px;
+    }
+
+    .polaroid-card {
+      background: #ffffff;
+      padding: 6px 6px 14px 6px;
+      border-radius: 8px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(0,0,0,0.06);
+      width: 90px;
+      transition: transform 0.4s ease;
+      opacity: 0;
+    }
+
+    .polaroid-card img {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+
+    /* Rotasi & Animasi Kemas */
+    .left .polaroid-card:nth-child(1) { transform: translateX(-60px) rotate(-8deg); }
+    .left .polaroid-card:nth-child(2) { transform: translateX(-60px) rotate(6deg); }
+    .left .polaroid-card:nth-child(3) { transform: translateX(-60px) rotate(-5deg); }
+
+    .right .polaroid-card:nth-child(1) { transform: translateX(60px) rotate(8deg); }
+    .right .polaroid-card:nth-child(2) { transform: translateX(60px) rotate(-6deg); }
+    .right .polaroid-card:nth-child(3) { transform: translateX(60px) rotate(7deg); }
+
+    .show-sides {
+      display: flex !important;
+    }
+
+    .show-sides .polaroid-card {
+      animation: popSideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .show-sides .polaroid-card:nth-child(1) { animation-delay: 0.15s; }
+    .show-sides .polaroid-card:nth-child(2) { animation-delay: 0.35s; }
+    .show-sides .polaroid-card:nth-child(3) { animation-delay: 0.55s; }
+
+    @keyframes popSideIn {
+      to {
+        opacity: 0.95;
+        transform: translateX(0) rotate(var(--rot, 0deg));
+      }
+    }
+
+    .left .polaroid-card:nth-child(1) { --rot: -7deg; }
+    .left .polaroid-card:nth-child(2) { --rot: 5deg; }
+    .left .polaroid-card:nth-child(3) { --rot: -6deg; }
+
+    .right .polaroid-card:nth-child(1) { --rot: 7deg; }
+    .right .polaroid-card:nth-child(2) { --rot: -5deg; }
+    .right .polaroid-card:nth-child(3) { --rot: 6deg; }
+
+    /* Penyelarasan untuk iPhone/Skrin Kecil */
+    @media (max-width: 600px) {
+      .side-gallery {
+        width: 72px;
+      }
+      .side-gallery.left { left: 4px; }
+      .side-gallery.right { right: 4px; }
+      .polaroid-card {
+        width: 65px;
+        padding: 4px 4px 10px 4px;
+      }
+      .polaroid-card img {
+        height: 65px;
+      }
+      .glass-card {
+        padding: 24px 14px;
+      }
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
@@ -278,26 +369,52 @@
 </head>
 <body>
 
+  <!-- Kiri: y1, y2, y3 -->
+  <div class="side-gallery left" id="leftGallery">
+    <div class="polaroid-card">
+      <img src="y1.jpg" alt="Memory 1" onerror="this.src='https://placehold.co/100x100/f7cac9/ffffff?text=y1'">
+    </div>
+    <div class="polaroid-card">
+      <img src="y2.jpg" alt="Memory 2" onerror="this.src='https://placehold.co/100x100/92a8d1/ffffff?text=y2'">
+    </div>
+    <div class="polaroid-card">
+      <img src="y3.jpg" alt="Memory 3" onerror="this.src='https://placehold.co/100x100/f7cac9/ffffff?text=y3'">
+    </div>
+  </div>
+
+  <!-- Kanan: y4, y5, y6 -->
+  <div class="side-gallery right" id="rightGallery">
+    <div class="polaroid-card">
+      <img src="y4.jpg" alt="Memory 4" onerror="this.src='https://placehold.co/100x100/92a8d1/ffffff?text=y4'">
+    </div>
+    <div class="polaroid-card">
+      <img src="y5.jpg" alt="Memory 5" onerror="this.src='https://placehold.co/100x100/f7cac9/ffffff?text=y5'">
+    </div>
+    <div class="polaroid-card">
+      <img src="y6.jpg" alt="Memory 6" onerror="this.src='https://placehold.co/100x100/92a8d1/ffffff?text=y6'">
+    </div>
+  </div>
+
   <div class="container">
     <div class="glass-card">
       
       <!-- Meme Header -->
       <div class="meme-wrapper">
         <img src="wonu.jpg" alt="Wonwoo Meme" class="wonwoo-meme-img" onerror="this.src='https://placehold.co/120x120/f7cac9/ffffff?text=Wonwoo+Cat'">
-        <span class="meme-tag">Wonwoo approved 🐱👓</span>
+        <span class="meme-tag">Wonu gile 🐱👓</span>
       </div>
 
       <div class="svt-badge">
-        <span>💎</span> SVT Carat Special Edition
+        <span>💎</span> SEBENTEEN
       </div>
 
       <h1>Happy 2nd Anniversary! ✨</h1>
-      <p class="subtitle">Dua tahun bersama, dan kau tetap yang paling Pretty U.</p>
+      <p class="subtitle">For Rahayu yang terpaling prettyU.</p>
 
       <!-- Counter -->
       <div class="counter-box">
         <div class="counter-days" id="daysCount">730</div>
-        <div class="counter-label">Hari Kita Bersama Sejak 12 September 2024 💕</div>
+        <div class="counter-label">We were together since 12 September 2024 💕</div>
       </div>
 
       <!-- Music Player Bar -->
@@ -319,7 +436,7 @@
 
       <!-- Envelope Trigger -->
       <button class="envelope-btn" id="openBtn" onclick="openLetter()">
-        <span>✉️</span> Buka Surat Khas
+        <span>✉️</span> Tekan ni TOLOL
       </button>
 
       <!-- Isi Surat & Meme Inside -->
@@ -330,22 +447,22 @@
             <img src="wonu.jpg" alt="Wonwoo mini meme" onerror="this.src='https://placehold.co/52x52/f7cac9/ffffff?text=🐱'">
             <div class="meme-inside-text">
               <strong>Wonwoo Certified:</strong><br>
-              "Tahniah genap 2 tahun! Walaupun aku bias dia, jaga dia elok-elok bro." 🐱✨
+              "Sape nigger ni." 🐱✨
             </div>
           </div>
 
-          <div class="letter-title">Untuk Awak yang Paling Pretty U... 🌸</div>
+          <div class="letter-title">Untuk Yuyu yang Paling Pretty U... 🌸</div>
           <div class="letter-body">
-Happy 2nd Anniversary! Tak sangka dah genap 2 tahun kita lalui perjalanan ni sama-sama. 
+Its been 2 years since kita declare yang kita cpl, ingat lagi waktu bro ni send aku minji kt tt. 
 
-Dari hari pertama sampai sekarang, awak sentiasa jadi orang yang buat hari-hari rasa lebih ceria dan bermakna. Walaupun Wonwoo bias nombor satu awak, saya tetap bersyukur sebab dapat jadi orang nombor satu dalam hati awak di dunia nyata. 🐱👓
+From the first day, i am loving u. Till now dho, even banyak nakmampos gado like wtf gile siot, but still: awak je terima saya dalam segala sudut. So I want to thank you for that. 🐱👓
 
-Terima kasih untuk setiap gelak tawa, kesabaran, dan memori manis sepanjang 2 tahun ni. 
+Thanks for giving me the true meaning of love and happiness for this two frickin years. 
 
-Semoga kita terus melangkah sama-sama untuk tahun-tahun yang seterusnya. You really are as pretty as the song says.
+May we still living further to get what we both always truly want: A simple love <3. You really are as pretty as the song says.
 
-With all my love,  
-Selamanya untuk awak 💎✨
+From nanan,  
+To yuyu masham 💎✨
           </div>
         </div>
       </div>
@@ -377,20 +494,23 @@ Selamanya untuk awak 💎✨
       }
     }
 
-    // Update butang automatik mengikut status audio
     audio.addEventListener('play', () => { playBtn.innerText = "⏸"; });
     audio.addEventListener('pause', () => { playBtn.innerText = "▶"; });
 
-    // 3. Papar Surat, Mainkan Muzik & Cetuskan Konfeti
+    // 3. Papar Surat, Munculkan Gambar Sisi & Cetuskan Konfeti
     function openLetter() {
       document.getElementById("secret-letter").style.display = "block";
       document.getElementById("openBtn").style.display = "none";
+
+      // Munculkan Gambar Kiri & Kanan
+      document.getElementById("leftGallery").classList.add("show-sides");
+      document.getElementById("rightGallery").classList.add("show-sides");
 
       if (audio.paused) {
         audio.play().catch(e => console.warn(e));
       }
 
-      // Konfeti Tema Carat (Rose Quartz & Serenity)
+      // Konfeti Carat
       confetti({
         particleCount: 85,
         spread: 70,
